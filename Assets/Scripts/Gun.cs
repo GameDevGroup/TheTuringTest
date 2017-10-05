@@ -20,11 +20,16 @@ public class Gun : MonoBehaviour {
 
 	public Animator animator;
 
+	public AudioClip shotSound;
+	public AudioClip reloadSound;
+	private AudioSource audioSource;
+
 	private float nextTimeToFire = 0f;
 	// Use this for initialization
 	void Start () {
 		currentAmmo = maxAmmo;
 		isReloading = false;
+		audioSource = GetComponent<AudioSource> ();
 	}
 
 	void OnEnable(){
@@ -56,7 +61,9 @@ public class Gun : MonoBehaviour {
 
 
 	void Shoot(){
+		
 		animator.Play ("WeaponShoot");
+		PlayShotSound ();
 		RaycastHit hit;
 
 		currentAmmo--;
@@ -83,6 +90,7 @@ public class Gun : MonoBehaviour {
 		isReloading = true;
 
 		animator.SetBool ("Reloading", true);
+		PlayReloadSound ();
 
 		//0.25f for animation transitions
 		yield return new WaitForSeconds (reloadTime- 0.25f);
@@ -90,5 +98,15 @@ public class Gun : MonoBehaviour {
 		yield return new WaitForSeconds (0.25f);
 		currentAmmo = maxAmmo;
 		isReloading = false;
+	}
+
+	void PlayShotSound(){
+		audioSource.clip = shotSound;
+		audioSource.Play ();
+	}
+
+	void PlayReloadSound(){
+		audioSource.clip = reloadSound;
+		audioSource.PlayDelayed (0.1f);
 	}
 }
