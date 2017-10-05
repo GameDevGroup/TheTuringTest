@@ -15,12 +15,16 @@ public class Aiming : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//0, 0, 0
-		aimHipSight = transform.localPosition;
 		//ak
 		//aimDownSight = new Vector3 (0.2f, 0.075f, -0.1f);
 		//m4 (0, 0.035, -0.1)
 		//pistol (-0.1, 0.1, -0.1)
 		//sniper (0.05, 0.05, -0.1)
+		init();
+	}
+
+	public void init() {
+		aimHipSight = transform.localPosition;
 
 		aiming = false;
 		endPos = aimHipSight;
@@ -28,16 +32,18 @@ public class Aiming : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		bool previousAim = aiming;
-		if (Input.GetMouseButtonDown (1)) {
-			aiming = !aiming;
-			if (aiming) {
-				endPos = aimDownSight;
-			} else {
-				endPos = aimHipSight;
+		if (this.transform.GetComponentInParent<WeaponSwitch>()) {
+			bool previousAim = aiming;
+			if (Input.GetMouseButtonDown (1)) {
+				aiming = !aiming;
+				if (aiming) {
+					endPos = aimDownSight;
+				} else {
+					endPos = aimHipSight;
+				}
 			}
-		}
 			
-		transform.localPosition = Vector3.Slerp (transform.localPosition, endPos, Time.deltaTime * aimSpeed);
+			transform.localPosition = Vector3.Slerp (transform.localPosition, endPos, Time.deltaTime * aimSpeed);
+		}
 	}
 }
